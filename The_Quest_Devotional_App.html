@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a2744">
+<title>The Quest — Devotional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:    #1a2744;
+  --navy2:   #1e2f55;
+  --accent:  #2C4A6E;
+  --gold:    #B8963E;
+  --gold-lt: #C9A84C;
+  --gold-dim:#8a6e32;
+  --cream:   #F7F3EC;
+  --cream2:  #EDE7D9;
+  --black:   #1A1A1A;
+  --grey:    #555555;
+  --grey-lt: #888888;
+  --white:   #ffffff;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { min-height:100%; background:var(--navy); font-family:'Cormorant Garamond',Georgia,serif; color:var(--black); overflow-x:hidden; }
+
+/* ── NAV ── */
+.nav { background:var(--navy); display:flex; border-bottom:1px solid rgba(184,150,62,0.3); position:sticky; top:0; z-index:100; }
+.nav-tab { flex:1; padding:15px 4px; text-align:center; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gold-dim); cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
+.nav-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* ── HEADER ── */
+.header { background:var(--navy); padding:16px 18px 12px; text-align:center; position:sticky; top:49px; z-index:99; }
+.header::after { content:''; display:block; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin-top:12px; }
+.header-eyebrow { font-family:'Cormorant Garamond',sans-serif; font-size:16px; font-style:italic; letter-spacing:2px; color:var(--gold-lt); text-transform:none; margin-bottom:2px; font-weight:600; }
+.header-title { font-family:'Montserrat',sans-serif; font-size:30px; font-weight:800; color:var(--white); letter-spacing:6px; }
+.header-sub { font-family:'Cormorant Garamond',serif; font-size:13px; font-style:italic; color:var(--gold-lt); margin-top:3px; }
+
+/* ── PANELS ── */
+.panel { display:none; background:var(--cream); min-height:calc(100vh - 110px); padding-bottom:32px; }
+.panel.active { display:block; }
+
+/* ── RESUME BANNER ── */
+.resume-banner { background:var(--navy2); padding:12px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(184,150,62,0.25); }
+.resume-text { font-family:'Cormorant Garamond',serif; font-size:13px; font-style:italic; color:rgba(255,255,255,0.8); }
+.resume-text strong { color:var(--gold-lt); font-style:normal; font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:1px; }
+.resume-btn { font-family:'Montserrat',sans-serif; font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); background:transparent; border:1px solid var(--gold-dim); border-radius:3px; padding:6px 12px; cursor:pointer; white-space:nowrap; }
+
+/* ── DAY VIEW ── */
+.day-view { padding:18px 18px 24px; }
+.day-badge { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.day-num { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); }
+.trail-badge { font-family:'Montserrat',sans-serif; font-size:9px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--accent); background:rgba(44,74,110,0.1); border:1px solid rgba(44,74,110,0.2); border-radius:20px; padding:3px 10px; }
+.day-title { font-family:'Montserrat',sans-serif; font-size:18px; font-weight:700; color:var(--navy); line-height:1.2; margin-bottom:16px; }
+
+/* Confession block */
+.confession-block { border-left:3px solid var(--gold); padding:10px 14px; background:rgba(184,150,62,0.06); margin-bottom:14px; border-radius:0 4px 4px 0; }
+.confession-p { font-family:'Cormorant Garamond',serif; font-size:14px; line-height:1.7; color:var(--black); margin-bottom:6px; }
+.confession-p:last-child { margin-bottom:0; }
+.confession-hard { font-family:'Montserrat',sans-serif; font-size:12px; font-weight:700; color:var(--navy); line-height:1.5; margin-bottom:6px; }
+
+/* Devotional */
+.devot-text { font-family:'Cormorant Garamond',serif; font-size:14.5px; line-height:1.75; color:var(--black); margin-bottom:20px; }
+
+/* ── TRAIL SECTION ── */
+.trail-section { margin-bottom:16px; border:1px solid rgba(184,150,62,0.2); border-radius:6px; overflow:hidden; }
+.trail-header { background:var(--navy); padding:12px 14px; display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
+.trail-num { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); flex-shrink:0; }
+.trail-checkboxes { display:flex; gap:6px; margin-left:auto; }
+.trail-cb { width:16px; height:16px; border:1.5px solid var(--gold-dim); border-radius:2px; background:transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .15s; }
+.trail-cb.checked { background:var(--gold); border-color:var(--gold); }
+.trail-cb.checked::after { content:'✓'; font-size:9px; color:var(--navy); font-weight:800; font-family:'Montserrat',sans-serif; }
+.trail-cb.current-cycle { border-color:var(--gold-lt); border-width:2px; }
+.trail-chevron { color:var(--gold-dim); font-size:14px; transition:transform .2s; flex-shrink:0; }
+.trail-section.open .trail-chevron { transform:rotate(180deg); }
+
+.trail-body { display:none; padding:14px; background:var(--white); }
+.trail-section.open .trail-body { display:block; }
+
+.trail-passage { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:1px; color:var(--gold); margin-bottom:10px; text-transform:uppercase; }
+.trail-question { font-family:'Cormorant Garamond',serif; font-size:14px; font-style:italic; line-height:1.65; color:var(--black); margin-bottom:12px; padding-left:14px; border-left:2px solid var(--gold); }
+.trail-entry { width:100%; min-height:80px; background:rgba(44,74,110,0.04); border:1px solid rgba(184,150,62,0.2); border-radius:4px; padding:10px 12px; font-family:'Cormorant Garamond',serif; font-size:14px; color:var(--black); line-height:1.6; resize:none; outline:none; transition:border-color .2s; -webkit-appearance:none; }
+.trail-entry:focus { border-color:var(--gold); background:rgba(44,74,110,0.07); }
+.trail-entry::placeholder { color:var(--grey-lt); font-style:italic; font-size:13px; }
+.trail-save { margin-top:8px; display:flex; justify-content:flex-end; gap:8px; align-items:center; }
+.trail-save-btn { font-family:'Montserrat',sans-serif; font-size:8.5px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--navy); background:var(--gold); border:none; border-radius:3px; padding:7px 14px; cursor:pointer; }
+.trail-saved-note { font-family:'Cormorant Garamond',serif; font-size:11px; font-style:italic; color:var(--gold-dim); display:none; }
+
+/* Day nav */
+.day-nav { display:flex; gap:10px; margin-top:20px; }
+.day-nav-btn { flex:1; padding:12px; border-radius:4px; font-family:'Montserrat',sans-serif; font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:all .2s; border:none; }
+.day-nav-prev { background:transparent; border:1px solid rgba(184,150,62,0.25); color:var(--grey-lt); }
+.day-nav-next { background:var(--navy); color:var(--gold); }
+
+/* Day list */
+.day-list { padding:14px 18px; }
+.day-list-item { display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--white); border-radius:4px; margin-bottom:8px; cursor:pointer; border-left:3px solid transparent; transition:all .2s; }
+.day-list-item:active { opacity:.8; }
+.day-list-item.current { border-left-color:var(--gold); background:rgba(184,150,62,0.06); }
+.day-list-item.has-entry { border-left-color:var(--accent); }
+.dli-num { font-family:'Montserrat',sans-serif; font-size:9px; font-weight:700; letter-spacing:1px; color:var(--gold-dim); min-width:32px; }
+.dli-title { font-family:'Cormorant Garamond',serif; font-size:14px; color:var(--navy); flex:1; }
+.dli-dots { display:flex; gap:3px; }
+.dli-dot { width:6px; height:6px; border-radius:50%; background:rgba(184,150,62,0.2); }
+.dli-dot.done { background:var(--gold); }
+
+/* ── PRESS PANEL ── */
+.press-panel-body { padding:16px 18px 32px; background:var(--cream); }
+.press-toggle { background:var(--white); border:1px solid rgba(184,150,62,0.2); border-radius:4px; padding:12px 14px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+.press-toggle-label { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--navy); }
+.press-toggle-sub { font-family:'Cormorant Garamond',serif; font-size:12px; font-style:italic; color:var(--grey-lt); margin-top:2px; }
+.press-toggle-chevron { color:var(--gold-dim); font-size:16px; transition:transform .2s; flex-shrink:0; }
+.press-toggle.open .press-toggle-chevron { transform:rotate(180deg); }
+.press-content { display:none; }
+.press-toggle.open + .press-content { display:block; }
+
+.press-card-body { background:var(--white); border:1px solid rgba(184,150,62,0.15); border-radius:4px; padding:16px; margin-bottom:10px; }
+.press-card-title { font-family:'Montserrat',sans-serif; font-size:20px; font-weight:800; color:var(--navy); letter-spacing:4px; text-align:center; margin-bottom:3px; }
+.press-card-sub { font-family:'Cormorant Garamond',serif; font-size:11px; font-style:italic; color:var(--gold); text-align:center; margin-bottom:12px; }
+.press-card-rule { height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin-bottom:12px; }
+
+.ps-step { padding:10px 0 8px; border-bottom:1px solid rgba(184,150,62,0.1); cursor:pointer; }
+.ps-step:last-of-type { border-bottom:none; }
+.ps-header { display:flex; align-items:flex-start; gap:10px; }
+.ps-letter { font-family:'Montserrat',sans-serif; font-size:22px; font-weight:800; color:var(--gold); line-height:1; min-width:22px; }
+.ps-title-block { flex:1; }
+.ps-word { font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; color:var(--navy); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:1px; }
+.ps-tagline { font-family:'Cormorant Garamond',serif; font-size:12px; font-style:italic; color:var(--grey); }
+.ps-chevron { color:var(--gold-dim); font-size:14px; transition:transform .2s; flex-shrink:0; margin-top:2px; }
+.ps-step.open .ps-chevron { transform:rotate(180deg); }
+.ps-body { display:none; padding-top:8px; padding-left:32px; }
+.ps-step.open .ps-body { display:block; }
+.ps-verse { border-left:2px solid var(--gold); padding:5px 8px; margin-bottom:7px; background:rgba(184,150,62,0.06); }
+.ps-verse-text { font-family:'Cormorant Garamond',serif; font-size:12px; font-style:italic; color:#2A2A2A; line-height:1.6; margin-bottom:2px; }
+.ps-verse-ref { font-family:'Montserrat',sans-serif; font-size:8px; font-weight:600; color:var(--accent); }
+.ps-body-text { font-family:'Cormorant Garamond',serif; font-size:13px; line-height:1.7; color:var(--black); }
+.ps-close { text-align:center; padding:12px 0 4px; border-top:1px solid rgba(184,150,62,0.15); margin-top:8px; }
+.ps-close-main { font-family:'Cormorant Garamond',serif; font-size:13px; font-weight:600; font-style:italic; color:var(--navy); margin-bottom:3px; }
+.ps-close-q { font-family:'Cormorant Garamond',serif; font-size:11px; font-style:italic; color:var(--grey); margin-bottom:4px; }
+.ps-close-anchor { font-family:'Cormorant Garamond',serif; font-size:11px; font-style:italic; color:var(--grey-lt); }
+
+/* Long PRESS step */
+.pl-step { padding:14px 0 10px; border-bottom:1px solid rgba(184,150,62,0.1); }
+.pl-step:last-of-type { border-bottom:none; }
+.pl-letter-word { font-family:'Montserrat',sans-serif; font-size:13px; font-weight:700; color:var(--navy); margin-bottom:3px; }
+.pl-letter-word span { color:var(--gold); font-size:16px; margin-right:8px; }
+.pl-tagline { font-family:'Cormorant Garamond',serif; font-size:13px; font-style:italic; color:var(--grey); margin-bottom:8px; }
+.pl-verse { border-left:2px solid var(--gold); padding:6px 10px; background:rgba(184,150,62,0.06); margin-bottom:8px; }
+.pl-verse-text { font-family:'Cormorant Garamond',serif; font-size:13px; font-style:italic; color:#2A2A2A; line-height:1.65; margin-bottom:2px; }
+.pl-verse-ref { font-family:'Montserrat',sans-serif; font-size:8.5px; font-weight:600; color:var(--accent); }
+.pl-body-text { font-family:'Cormorant Garamond',serif; font-size:14px; line-height:1.75; color:var(--black); }
+
+/* ── ARCHIVE PANEL ── */
+.archive-body { padding:16px 18px 32px; background:var(--cream); }
+.archive-empty { text-align:center; padding:40px 20px; font-family:'Cormorant Garamond',serif; font-size:14px; font-style:italic; color:var(--grey-lt); }
+.archive-cycle { background:var(--white); border-radius:4px; border-left:3px solid var(--gold); margin-bottom:16px; overflow:hidden; }
+.archive-cycle-header { padding:12px 14px; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+.archive-cycle-title { font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; color:var(--accent); text-transform:uppercase; }
+.archive-cycle-date { font-family:'Cormorant Garamond',serif; font-size:12px; font-style:italic; color:var(--grey-lt); }
+.archive-cycle-chevron { color:var(--gold-dim); font-size:14px; transition:transform .2s; }
+.archive-cycle.open .archive-cycle-chevron { transform:rotate(180deg); }
+.archive-cycle-body { display:none; padding:0 14px 14px; }
+.archive-cycle.open .archive-cycle-body { display:block; }
+.archive-entry { padding:10px 0; border-bottom:1px solid rgba(184,150,62,0.1); }
+.archive-entry:last-child { border-bottom:none; }
+.archive-entry-label { font-family:'Montserrat',sans-serif; font-size:8px; font-weight:700; letter-spacing:1.5px; color:var(--gold-dim); text-transform:uppercase; margin-bottom:3px; }
+.archive-entry-text { font-family:'Cormorant Garamond',serif; font-size:13px; color:var(--black); line-height:1.6; }
+
+/* ── COMPLETE MODAL ── */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(26,39,68,0.9); z-index:200; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.show { display:flex; }
+.modal-box { background:var(--cream); border-radius:8px; padding:28px 24px; max-width:380px; width:100%; text-align:center; position:relative; }
+.modal-box::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--gold),transparent); border-radius:8px 8px 0 0; }
+.modal-title { font-family:'Montserrat',sans-serif; font-size:14px; font-weight:800; color:var(--navy); letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; }
+.modal-text { font-family:'Cormorant Garamond',serif; font-size:15px; line-height:1.7; color:var(--black); margin-bottom:20px; }
+.modal-text em { color:var(--gold-dim); font-style:normal; font-weight:600; }
+.modal-btns { display:flex; gap:10px; flex-direction:column; }
+.modal-btn-primary { background:var(--navy); color:var(--gold); border:none; border-radius:4px; padding:13px; font-family:'Montserrat',sans-serif; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; cursor:pointer; }
+.modal-btn-secondary { background:transparent; color:var(--grey); border:1px solid rgba(184,150,62,0.2); border-radius:4px; padding:10px; font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; }
+
+/* ── DESKTOP ── */
+@media (min-width:600px) {
+  .wrap { max-width:480px; margin:0 auto; box-shadow:0 8px 48px rgba(0,0,0,0.5); min-height:100vh; }
+  .panel { min-height:auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- Header -->
+<div class="header">
+  <div class="header-eyebrow">The Quest</div>
+  <div class="header-title">DEVOTIONAL</div>
+  <div class="header-sub" id="header-trail-label">Trail 1 &nbsp;&bull;&nbsp; Day 1</div>
+</div>
+
+<!-- Nav -->
+<div class="nav">
+  <div class="nav-tab active" onclick="showPanel('today',this)">Today</div>
+  <div class="nav-tab" onclick="showPanel('days',this)">Days</div>
+  <div class="nav-tab" onclick="showPanel('press',this)">PRESS</div>
+  <div class="nav-tab" onclick="showPanel('archive',this)">Archive</div>
+</div>
+
+<!-- ── TODAY PANEL ── -->
+<div class="panel active" id="panel-today">
+  <div class="resume-banner" id="resume-banner">
+    <div class="resume-text">
+      <strong id="resume-label">Trail 1 &bull; Day 1</strong><br>
+      <span id="resume-title">What I Want to Boast In</span>
+    </div>
+    <button class="resume-btn" onclick="goToResume()">Continue &rarr;</button>
+  </div>
+  <div id="day-view-container"></div>
+</div>
+
+<!-- ── DAYS PANEL ── -->
+<div class="panel" id="panel-days">
+  <div class="day-list" id="day-list-container"></div>
+</div>
+
+<!-- ── PRESS PANEL ── -->
+<div class="panel" id="panel-press">
+  <div class="press-panel-body">
+
+    <!-- Short PRESS -->
+    <div class="press-toggle" onclick="this.classList.toggle('open')">
+      <div>
+        <div class="press-toggle-label">PRESS &mdash; Quick Reference</div>
+        <div class="press-toggle-sub">The five movements at a glance</div>
+      </div>
+      <div class="press-toggle-chevron">&#8964;</div>
+    </div>
+    <div class="press-content">
+      <div class="press-card-body">
+        <div class="press-card-title">PRESS</div>
+        <div class="press-card-sub">Making the Soul Happy in God &mdash; The First Work of Every Day</div>
+        <div class="press-card-rule"></div>
+        <div id="press-short-steps"></div>
+        <div class="ps-close">
+          <div class="ps-close-main">The goal is not completion. It is gladness in Him.</div>
+          <div class="ps-close-q">Did I leave with my soul more glad in God than when I arrived?</div>
+          <div class="ps-close-anchor"><em>I press in until I can press in, and then I press in.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Long PRESS -->
+    <div class="press-toggle" onclick="this.classList.toggle('open')" style="margin-top:6px">
+      <div>
+        <div class="press-toggle-label">PRESS &mdash; Full Notes</div>
+        <div class="press-toggle-sub">The depth behind each step</div>
+      </div>
+      <div class="press-toggle-chevron">&#8964;</div>
+    </div>
+    <div class="press-content">
+      <div class="press-card-body" id="press-long-steps"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── ARCHIVE PANEL ── -->
+<div class="panel" id="panel-archive">
+  <div class="archive-body">
+    <div style="display:flex;gap:10px;margin-bottom:16px;">
+      <button onclick="exportEntries()" style="flex:1;background:var(--navy);color:var(--gold);border:none;border-radius:4px;padding:11px;font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;">Export All Entries</button>
+    </div>
+    <div id="archive-container"></div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<!-- Complete Modal -->
+<div class="modal-overlay" id="complete-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="modal-title">Trail Complete</div>
+    <div class="modal-text" id="modal-text"></div>
+    <div class="modal-btns">
+      <button class="modal-btn-primary" id="modal-primary-btn"></button>
+      <button class="modal-btn-secondary" onclick="closeModal()">Not yet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════
+
+const PRESS_SHORT = [
+  { l:'P', w:'Pour Out', tag:"Bring what is actually there, not what you think should be there.",
+    vt:"Pour out your heart before Him; God is a refuge for us.", vr:"Psalm 62:8 (LSB)",
+    body:"Before anything else, bring what is actually in you. The cold heart. The distracted mind. The unfinished worries. He already knows. Coming honestly is the first act of trust." },
+  { l:'R', w:'Remember', tag:"Before I bring my needs, I bring my worship.",
+    vt:"Bless the LORD, O my soul, and all that is within me, bless His holy name. Forget none of His benefits.", vr:"Psalm 103:1–2 (LSB)",
+    body:"A Psalm. A hymn. One truth about who He is, held before everything else. Worship is not the warm-up. It is the orientation that makes everything after it right." },
+  { l:'E', w:'Eat', tag:"Read to find Him, not to finish.",
+    vt:"Your words were found and I ate them, and Your words became for me a joy and the delight of my heart.", vr:"Jeremiah 15:16 (LSB)",
+    body:"Stay where something moves. Ask why it moves you. Not information, but encounter. Increased clarity, stronger desire, depth of peace, Truth affecting your heart, sin convicting, internal steadiness, real gladness, great joy. The response is His to give." },
+  { l:'S', w:'Speak', tag:"Let what I just read become what I say back to Him.",
+    vt:"In everything by prayer and petition with thanksgiving let your requests be made known to God.", vr:"Philippians 4:6 (LSB)",
+    body:"Respond to what He just said. Worship what His character reveals. Confess what it exposes. Ask for what it promises. The Word and prayer are one conversation." },
+  { l:'S', w:'Stay', tag:"Don\u2019t leave when I have technically done something.",
+    vt:"Wait for the LORD; be strong and let your heart take courage; yes, wait for the LORD.", vr:"Psalm 27:14 (LSB)",
+    body:"Stay until the heart is actually glad in Him. Go back through P\u2013R\u2013E\u2013S again if needed, each time with a warmer heart and more capacity for deeper connection. This is the hardest step and the most important one." },
+];
+
+const PRESS_LONG = [
+  { l:'P', w:'Pour Out', tag:"Bring what is actually there, not what you think should be there.",
+    vt:"Pour out your heart before Him; God is a refuge for us.", vr:"Psalm 62:8 (LSB)",
+    body:"Before anything else, I pour out what is actually in me. The cold heart. The distracted mind. The unfinished worries. I do not clean myself up before I come. I come, and I bring all of it. This is not weakness. It is the posture of a man who knows he is welcome exactly as he is. Coming honestly is the first act of trust." },
+  { l:'R', w:'Remember', tag:"Before I bring my needs, I bring my worship. A soul that remembers who God is before it asks anything of Him arrives at the right posture.",
+    vt:"Bless the LORD, O my soul, and all that is within me, bless His holy name. Bless the LORD, O my soul, and forget none of His benefits.", vr:"Psalm 103:1–2 (LSB)",
+    body:"David commands his own soul to remember before he asks for anything. I do the same. A Psalm read slowly. A hymn turned over in the mind. One truth about who He is, held before everything else. Worship is not the warm-up. It is the orientation that makes everything after it right." },
+  { l:'E', w:'Eat', tag:"Read to find Him, not to finish. Stay with what strikes you until it moves from the page into the heart.",
+    vt:"Your words were found and I ate them, and Your words became for me a joy and the delight of my heart.", vr:"Jeremiah 15:16 (LSB)",
+    body:"Jeremiah did not study the Word. He ate it. There is a difference between reading chapters and feeding on a verse. I am not trying to cover ground. I am trying to find Him. I stay where something moves. I ask why it moves me. What that encounter looks like is not always the same. It could come as increased clarity, or a stronger desire for Him, or a depth of peace. Truth pressing on the heart. Sin convicting. Internal steadiness. Real gladness. Great joy. The response is His to give. My part is to stay in the text long enough to receive whatever He brings." },
+  { l:'S', w:'Speak', tag:"Let what I just read become what I say back to Him. Prayer is not a separate activity from the Word. It is the response to it.",
+    vt:"In everything by prayer and petition with thanksgiving let your requests be made known to God.", vr:"Philippians 4:6 (LSB)",
+    body:"I do not finish reading and then switch to prayer as if they are separate tasks. I respond to what He just said. If the text reveals something about His character, I worship Him for it. If it exposes something in me, I confess it. If it promises something, I ask for it. The Word and prayer are one conversation. This is how the text becomes alive rather than merely read." },
+  { l:'S', w:'Stay', tag:"Don\u2019t leave when I have technically done something. Stay until the heart is actually glad in Him. This is the hardest step and the most important one.",
+    vt:"Wait for the LORD; be strong and let your heart take courage; yes, wait for the LORD.", vr:"Psalm 27:14 (LSB)",
+    body:"This is where Mueller\u2019s principle lives. The soul\u2019s happiness in God is the goal. Some mornings gladness comes quickly. Some mornings I am staying long after I expected to. Both are pressing in. And staying does not mean sitting still. It means going back. Back through Pour Out, back through Remember, back through Eat and Speak, each time with a heart that is a little warmer, a little more open, a little more capable of deeper connection than the pass before. The man who learns to stay is the man who eventually finds that the same space that once required clearing begins to feel like home." },
+];
+
+const DAYS = [
+  { n:1, title:"What I Want to Boast In",
+    confession:[
+      {type:'p',text:"I want to boast in one thing."},
+      {type:'p',text:"Not in what I have built. Not in what I lead, teach, or carry. Not in my discipline, my faithfulness, or the architecture of my days. I want to boast in this alone: that I understand and know God. That He is my greatest treasure. That knowing Him is the thing I would give everything else to keep."},
+      {type:'p',text:"That is what I want to be true of me. But wanting it and living it are not the same quest. And if I am not deliberately pressing into it, I am already drifting from it."},
+      {type:'h',text:"This is not neutral. This is war."},
+      {type:'p',text:"God is not useful to me. He is the treasure."},
+    ],
+    devot:"The confession that starts everything is not about performance or failure. It is about direction. I am not describing where I have arrived. I am naming what I want more than anything else, and then being honest that wanting it and living it are not the same quest. My life is a running answer to the question of what I love most. The first honest act is to stop asking myself what I treasure and start watching myself.",
+    trails:[
+      {passage:"Jeremiah 9:23\u201324 | Philippians 3:3\u201311", q:"Paul says he counted everything as loss for the surpassing value of knowing Christ. What in my life am I still holding as gain that has not yet been genuinely reclassified?"},
+      {passage:"Psalm 73:25\u201328 | Matthew 6:19\u201324", q:"Asaph says, \u2018Whom have I in heaven but You?\u2019 Can I say that honestly today \u2014 or does something else hold the center of my affections when no one is watching?"},
+      {passage:"Psalm 16:5\u201311 | Colossians 3:1\u201311", q:"David calls God his portion and his lot. What does my daily life reveal about what I am actually treating as my portion \u2014 the thing I rely on to make me feel complete?"},
+    ]},
+  { n:2, title:"The Diagnosis",
+    confession:[
+      {type:'p',text:"Whatever holds my deepest affection governs my life. My time flows toward it without being told. My mind returns to it in quiet moments. My emotions orbit it. I can say God is my treasure, structure everything around Him, serve faithfully \u2014 and still, underneath all of it, my heart can belong to something else."},
+      {type:'p',text:"Jesus is not offering a principle. He is making a diagnosis. If I want to know what I treasure, I should not ask myself \u2014 I should watch myself. Where does my time go? What does my mind reach for when it is not occupied? What makes me most anxious when it is threatened?"},
+      {type:'h',text:"My life is already answering the question. The only question is whether I am willing to hear the answer."},
+    ],
+    devot:"There is a gap between what I believe and what I actually treasure, and I can fill that gap with the right words indefinitely without it ever closing. My life is a running answer to the question of what I love most. The courage required here is not to change immediately. It is simply to hear the answer without defending myself. The man who cannot sit still with the diagnosis will never be ready for the pursuit.",
+    trails:[
+      {passage:"Matthew 6:19\u201324 | Luke 12:29\u201334", q:"Jesus says where your treasure is, there your heart will be also. What does the direction of my anxiety reveal about where my treasure actually is?"},
+      {passage:"Psalm 139:1\u20136, 23\u201324 | Hebrews 4:12\u201313", q:"David asks God to search him and know his heart. What would God find if He searched the center of my affections today?"},
+      {passage:"James 4:1\u201310 | 1 John 2:15\u201317", q:"James says our quarrels come from desires that wage war within us. What desires in me are competing with the desire for God \u2014 and which one is currently winning?"},
+    ]},
+  { n:3, title:"He Could Not Not Sell Everything",
+    confession:[
+      {type:'p',text:"The man sells everything. But why? From joy. Not duty. Not grim theological resolve. Not white-knuckled obedience. He sells everything because he has found something so far superior that every cost feels like a trade he is glad to make."},
+      {type:'p',text:"He could not not sell everything. The sight of the treasure made settling impossible. This was not a decision that required great willpower. It was the only response available to a man who had seen what he had seen."},
+      {type:'h',text:"Only one of those lasts. And I know which one I drift toward when nothing is pressing me."},
+    ],
+    devot:"The parable is not primarily about sacrifice. It is about sight. The man sells everything because of what he has seen. The question is not whether I am willing to give things up for God. It is whether I have actually seen what he saw. Paul did not manage his losses \u2014 he genuinely reclassified everything. The quest is not to try harder to obey. It is to keep seeing Him as what He is.",
+    trails:[
+      {passage:"Matthew 13:44\u201346 | Philippians 3:7\u20138", q:"The man sells everything from joy \u2014 not duty. Is my obedience today coming from having seen something better, or from obligation I am carrying like a weight?"},
+      {passage:"Isaiah 55:1\u20135 | John 6:35, 48\u201351", q:"God says come, buy wine and milk without price. What am I spending my life\u2019s energy on that is not the treasure?"},
+      {passage:"2 Corinthians 4:16\u201318 | Romans 8:18", q:"Paul says our light momentary affliction produces an eternal weight of glory. What would change about how I hold my losses if I believed the treasure was worth incomparably more?"},
+    ]},
+  { n:4, title:"The Dividing Line",
+    confession:[
+      {type:'p',text:"On one side: trying to give things up for God. Feeling obedience as subtraction. Carrying faith like a weight. On the other: seeing God as better than everything else. Obeying not primarily from duty but from reoriented desire."},
+      {type:'h',text:"Only one of those lasts. And I know which one I drift toward when nothing is pressing me."},
+      {type:'p',text:"Paul had arrived at the other side. Writing from a prison cell \u2014 stripped of status, freedom, reputation \u2014 he called it all rubbish in view of the surpassing value of knowing Christ."},
+    ],
+    devot:"There are two versions of the Christian life that look almost identical from the outside. I know which side I drift toward when nothing is pressing me. The honest diagnostic is not the moments when I rise to something difficult, but the ordinary moments when no one is watching and the cost of obedience is simply choosing what is better over what is immediately satisfying.",
+    trails:[
+      {passage:"Philippians 3:4\u201314 | Romans 8:31\u201339", q:"Paul counts his credentials as loss for the surpassing value of knowing Christ. What am I still holding as gain that has not yet been genuinely reclassified?"},
+      {passage:"Hebrews 11:24\u201326 | Matthew 16:24\u201326", q:"Moses chose mistreatment over the passing pleasures of sin. Where is my faith still feeling like loss rather than gain?"},
+      {passage:"Luke 9:57\u201362 | Mark 10:17\u201322", q:"The rich young ruler went away sorrowful. What is the thing that, if Jesus asked me to release it, I would go away sad rather than glad?"},
+    ]},
+  { n:5, title:"My Heart Drifts",
+    confession:[
+      {type:'p',text:"My heart does not stay fixed on God on its own. Left alone, it drifts. It dulls. It finds smaller, louder things to love \u2014 things that offer more immediate return."},
+      {type:'p',text:"The war for joy is not passive. It is waged in the moments when Scripture feels dry, when prayer feels like talking to a wall, when distraction is easier than presence. This is where I lose most often \u2014 not in dramatic rebellion, but in the accumulated weight of small surrenders."},
+      {type:'h',text:"Drift is not neutral. Every small surrender compounds."},
+    ],
+    devot:"The war is not fought where I expect it. It is fought in the ordinary unexamined moments when distraction is easier than presence. By the time I notice the drift, I am already far from where I started. Scripture does not tell me to feel better about my heart. It tells me to command it.",
+    trails:[
+      {passage:"Psalm 42:1\u201311 | Hebrews 2:1\u20134", q:"The Psalmist commands himself to hope in God when his soul is cast down. What small surrender have I been making repeatedly that I need to confront?"},
+      {passage:"Proverbs 4:20\u201327 | 1 Corinthians 10:12\u201313", q:"Solomon says to guard the heart with all vigilance. Where is my heart being left unguarded \u2014 what am I giving access to that is producing drift?"},
+      {passage:"Psalm 119:9\u201311, 25\u201332 | Romans 13:14", q:"The Psalmist stored up God\u2019s word in his heart so he might not sin. What does my current pattern of engaging with Scripture reveal about how seriously I am taking the accumulation of drift?"},
+    ]},
+  { n:6, title:"Commanding the Soul",
+    confession:[
+      {type:'p',text:"David is not floating in spiritual comfort. His soul is cast down, his heart disturbed, and his response is not to wait for the feeling to return. He turns on himself. He commands his soul to hope \u2014 not because the circumstances changed, but because God has not."},
+      {type:'h',text:"Drift is not neutral. Every small surrender compounds."},
+    ],
+    devot:"Why are you in despair, O my soul? That is not a lament. It is a confrontation. David is pressing his soul the way you press a man who is about to quit. God has not changed. The command \u2014 hope in God \u2014 is not based on how things feel. It is based on who God is. This is the practice: turning on myself before my feelings turn on my faith.",
+    trails:[
+      {passage:"Psalm 42:1\u201311 | Psalm 43:3\u20135", q:"David repeats the refrain \u2018hope in God\u2019 three times. What circumstance in my life right now requires me to make the same command?"},
+      {passage:"Lamentations 3:19\u201326 | Psalm 130:1\u20138", q:"Jeremiah calls to mind God\u2019s mercies and finds hope. What truth about God do I need to call to mind today against what my soul is feeling?"},
+      {passage:"Romans 5:1\u20135 | James 1:2\u20134", q:"Paul says tribulation produces perseverance, proven character, hope. Where in my life is God using difficulty to produce something I could not get any other way?"},
+    ]},
+  { n:7, title:"Eating the Word",
+    confession:[
+      {type:'p',text:"Jeremiah did not study the Word. He ate it. Found by it, consumed it, and it became joy inside him. I know the difference between those two kinds of engagement."},
+      {type:'h',text:"This is the daily work of a man who wants to know God \u2014 not just know about Him."},
+      {type:'p',text:"The alternative is slow spiritual starvation dressed up as busyness. I have been there. Active, structured, productive, and quietly hollow."},
+    ],
+    devot:"There is a kind of Bible reading that is really information management. And there is a kind of Bible reading where you stay with a verse until it cracks something open that you did not know was closed. The test is not how much I read. It is whether the Word became joy and the delight of my heart.",
+    trails:[
+      {passage:"Jeremiah 15:15\u201318 | Psalm 19:7\u201311", q:"Jeremiah says Your words became for me a joy and the delight of my heart. When did I last experience the Word as joy and delight rather than a task to complete?"},
+      {passage:"Psalm 119:97\u2013112 | Deuteronomy 8:1\u20135", q:"The Psalmist says how I love your law \u2014 it is my meditation all the day. What does my pattern of engaging with Scripture reveal about whether I am eating or managing it?"},
+      {passage:"Matthew 4:1\u201314 | John 6:27, 48\u201351", q:"Jesus says man shall not live by bread alone. He calls Himself the bread of life. What would it look like to come to Scripture today genuinely hungry \u2014 expecting to be fed, not just informed?"},
+    ]},
+  { n:8, title:"What Staying Costs",
+    confession:[
+      {type:'p',text:"You don\u2019t leave when nothing is happening. You stay until it burns."},
+      {type:'p',text:"You bring your dullness into the text instead of reading around it."},
+      {type:'p',text:"You return to what has moved you before, rather than chasing novelty and calling it growth."},
+      {type:'h',text:"This is the daily work of a man who wants to know God \u2014 not just know about Him."},
+    ],
+    devot:"The cost of staying is simply this: I have to be willing to sit with nothing happening for long enough that something does. I have to bring my dullness into the text instead of waiting until I feel ready. Just honest and patient and persistent, in the way a man who is genuinely hungry stays at the table until he has eaten.",
+    trails:[
+      {passage:"Psalm 119:25\u201332 | Luke 24:13\u201335", q:"The disciples say their hearts burned within them when Jesus opened the Scriptures. When did something last burn in me from the Word?"},
+      {passage:"Psalm 63:1\u20138 | Song of Solomon 3:1\u20134", q:"David says his soul thirsts for God in a dry and weary land. The Beloved seeks and does not find, then seeks again. Have I stopped too early?"},
+      {passage:"Psalm 27:4, 13\u201314 | Isaiah 64:4", q:"David says one thing I have asked: to behold the beauty of the LORD. He says wait for the LORD \u2014 be strong. Where do I quit too early because nothing seems to be happening?"},
+    ]},
+  { n:9, title:"Fullness of Joy",
+    confession:[
+      {type:'p',text:"Fullness. Not partial, not occasional, not circumstantial. Fullness of joy \u2014 in His presence. Permanently."},
+      {type:'p',text:"Asaph found something so supreme that everything else settled into its proper place. God is his portion \u2014 permanent, inexhaustible, unlosable."},
+      {type:'h',text:"That life is available. I am the only reason I do not live there."},
+    ],
+    devot:"Psalm 16:11 does not say some joy, or seasonal joy, or joy contingent on circumstances cooperating. It says fullness. In His presence. Permanently. The joy Habakkuk found could not be removed with the flock and the harvest because it was not built on them. It was built on something the world cannot reach.",
+    trails:[
+      {passage:"Psalm 16:1\u201311 | John 15:9\u201311", q:"David says in Your presence is fullness of joy. Jesus says my joy may be in you and your joy full. What is the difference between the joy I currently experience and the fullness these passages describe?"},
+      {passage:"Psalm 73:1\u201328 | Habakkuk 3:17\u201319", q:"Asaph nearly lost everything. Habakkuk rejoiced when everything was stripped away. Both arrived at God as their portion. What would it mean to call God my portion today, before circumstances cooperate?"},
+      {passage:"Romans 15:13 | Nehemiah 8:10 | 1 Peter 1:8\u20139", q:"Paul prays God would fill us with all joy and peace in believing. Peter speaks of joy inexpressible and filled with glory. What is producing or blocking that kind of joy in me right now?"},
+    ]},
+  { n:10, title:"Asaph in the Sanctuary",
+    confession:[
+      {type:'p',text:"Asaph arrived at this through crisis. Watching the wicked prosper, his grip on God loosening verse by verse. Then he entered the sanctuary. Everything reordered."},
+      {type:'p',text:"Asaph found something so supreme that everything else settled into its proper place. Whom have I in heaven but You? And besides You, I desire nothing on earth."},
+    ],
+    devot:"Asaph nearly lost his faith through a crisis of comparison. And then he entered the sanctuary \u2014 a place of encounter where his vision was corrected and everything settled into proper proportion. That is what the pursuit is for. Not performance. Vision correction.",
+    trails:[
+      {passage:"Psalm 73:1\u201328 | Psalm 84:1\u201312", q:"Asaph says until I went into the sanctuary of God, then I discerned. Is there a reorientation I need today that only encounter with God can produce?"},
+      {passage:"Isaiah 6:1\u20138 | Revelation 4:1\u201311", q:"When Isaiah saw the LORD high and lifted up, his self-perception and mission were transformed. What would change about how I see my current situation if I genuinely saw God as He is?"},
+      {passage:"Psalm 27:1\u20145 | Hebrews 10:19\u201325", q:"David says one thing I have desired: to behold the beauty of the LORD. Hebrews says we have confidence to enter the holy places by the blood of Jesus. Am I using the access I have been given?"},
+    ]},
+  { n:11, title:"Yet I Will Rejoice",
+    confession:[
+      {type:'p',text:"Everything stripped away. Every visible blessing gone. Joy in God remains \u2014 not because Habakkuk was emotionally extraordinary, but because he had built his joy on something the world cannot reach."},
+      {type:'p',text:"I settle for distraction over presence. Comfort over pursuit. The result is not dramatic collapse \u2014 it is chronic low-grade joylessness that no amount of ministry, productivity, or theological precision ever fills."},
+      {type:'h',text:"Every time I trade Him for something lesser, I prove what I believe about Him."},
+    ],
+    devot:"Habakkuk describes total loss and arrives at yet I will rejoice. Not with gritted teeth. With conviction. Because the God he is tethered to is not a circumstance. He is a Person who has not moved. The joy that survives everything is only available to the man who has built it on something that cannot be taken.",
+    trails:[
+      {passage:"Habakkuk 3:1\u201319 | Psalm 46:1\u201311", q:"Habakkuk says yet I will rejoice in the LORD. What circumstance in my life right now is testing whether my joy is built on something that can be stripped away?"},
+      {passage:"Job 1:13\u201322 | Job 19:25\u201327", q:"Job loses everything and says blessed be the name of the LORD. He later says I know that my Redeemer lives. What does Job\u2019s response reveal about what his joy was actually built on?"},
+      {passage:"2 Corinthians 6:3\u201310 | Philippians 4:11\u201313", q:"Paul describes himself as sorrowful yet always rejoicing, having nothing yet possessing everything. He says he learned contentment. What would it look like to genuinely learn this?"},
+    ]},
+  { n:12, title:"That Life Is Available",
+    confession:[
+      {type:'h',text:"That life is available. I am the only reason I do not live there."},
+      {type:'p',text:"I settle for distraction over presence. Comfort over pursuit. Activity around God rather than communion with Him. I build a life that orbits Him without ever resting in Him."},
+      {type:'p',text:"Because none of those things are the treasure. He is."},
+    ],
+    devot:"This removes every excuse. Not circumstances. Not season of life. Not the demands on my time. I am the only reason I do not live in the fullness of joy God promises. The treasure is available. The promise is real. What stands between me and it is consistently my own settling.",
+    trails:[
+      {passage:"Psalm 16:5\u201311 | Matthew 11:28\u201330", q:"David says in Your presence is fullness of joy. Jesus says come to Me and I will give you rest. What am I building my life around that is not actually filling me?"},
+      {passage:"John 10:10 | Luke 15:11\u201324", q:"Jesus says I came that they may have life abundantly. The prodigal son came to himself in a pig pen. Where do I need to come to myself today and stop settling?"},
+      {passage:"Revelation 2:4\u20135 | Jeremiah 2:12\u201313", q:"God tells Ephesus: you have left your first love. Jeremiah says my people have forsaken Me and hewed cisterns that hold no water. What cistern have I been drawing from that is not holding water?"},
+    ]},
+  { n:13, title:"He Must Drive It",
+    confession:[
+      {type:'p',text:"The capacity to want God, to seek God, to find any delight in Him at all \u2014 none of it originates in me. The heart I am trying to reorient was dead before God moved toward it."},
+      {type:'p',text:"I will give. I will remove. I will put. I will cause. Every verb belongs to God."},
+      {type:'h',text:"I am responsible for my effort. He is responsible for making that effort possible."},
+    ],
+    devot:"Before any pursuit, this must be settled: the engine is not mine. The desire to seek God at all was placed in me by Him. If I approach this as a project I manage through effort, I will exhaust myself building something that cannot hold. The effort is real \u2014 work out your salvation is a command. But the reason I can is the clause that follows: for it is God who is at work in you, both to will and to work.",
+    trails:[
+      {passage:"Ezekiel 36:24\u201327 | Philippians 2:12\u201313", q:"Ezekiel says I will give you a new heart \u2014 every verb belongs to God. Philippians says work out your salvation for it is God who is at work in you. Am I leaning too far toward self-reliance or passivity?"},
+      {passage:"John 6:44, 63\u201365 | Romans 8:5\u20138", q:"Jesus says no one can come to Me unless the Father draws him. What does it mean for my daily pursuit that even the desire to seek God is a gift I did not generate?"},
+      {passage:"1 Corinthians 15:10 | Galatians 2:20 | 2 Corinthians 12:9\u201310", q:"Paul says by the grace of God I am what I am, yet I worked. He says it is no longer I who live but Christ. What does grace-enabled effort look like for me today?"},
+    ]},
+  { n:14, title:"Jacob in the Dark",
+    confession:[
+      {type:'p',text:"Jacob was alone in the dark, wrestling with God through the night. God came to him. God initiated the encounter. And yet Jacob\u2019s part was entirely real: he wrestled, he refused to let go."},
+      {type:'p',text:"\u2018I will not let you go unless you bless me.\u2019"},
+      {type:'h',text:"The pattern is not their method. It is their refusal to let go."},
+    ],
+    devot:"Jacob did not summon the encounter. God came to him in the dark. But Jacob\u2019s part was entirely real \u2014 he wrestled, refused to let go, and when given the chance to release his grip said the only thing a man who has seen what is at stake could say: I will not let you go unless you bless me. That is a man who has decided that losing the grip is the worst possible outcome.",
+    trails:[
+      {passage:"Genesis 32:22\u201332 | Luke 18:1\u20138", q:"Jacob says I will not let you go unless you bless me. The persistent widow returns again and again. Both are rewarded for refusal, not technique. Where do I need to refuse to let go right now?"},
+      {passage:"Hosea 12:2\u20136 | Matthew 7:7\u201311", q:"Hosea recalls Jacob\u2019s wrestling and says return to your God, hold fast. Jesus says ask and it will be given. What am I not yet asking persistently enough?"},
+      {passage:"Hebrews 11:6 | Psalm 40:1\u20133", q:"Hebrews says God rewards those who diligently seek Him. David says I waited patiently for the LORD \u2014 He inclined and heard my cry. What would patient, refusing-to-let-go seeking look like in my pursuit right now?"},
+    ]},
+  { n:15, title:"Apart from Me \u2014 Nothing",
+    confession:[
+      {type:'p',text:"Apart from Me, nothing. Not less fruit. Not slower growth. Nothing. The branch does not strain to produce fruit. It stays connected to the vine, and the vine produces through it."},
+      {type:'p',text:"The pursuit is mine. The joy is His to grant. I do not produce it. I pursue the One who does."},
+      {type:'p',text:"And even that pursuit is only possible because He first pursued me."},
+    ],
+    devot:"The branch does not strain. It abides. This is the complete inversion of the performance instinct. Abiding is not passive \u2014 it is the daily, active, sometimes costly choice to stay connected to the Source rather than running on yesterday\u2019s reserves. Every move I make toward God begins with a move He already made toward me.",
+    trails:[
+      {passage:"John 15:1\u201311 | Psalm 1:1\u20133", q:"Jesus says the branch cannot bear fruit by itself unless it abides in the vine. Where is my connection to the vine most at risk right now \u2014 what is pulling me toward independence?"},
+      {passage:"Galatians 5:16\u201325 | Romans 8:1\u201316", q:"Paul says if we live by the Spirit, let us also keep in step with the Spirit. Where am I straining to produce what only the vine can produce?"},
+      {passage:"1 John 4:19 | Romans 5:8 | Ephesians 2:4\u20135", q:"We love because He first loved us. Every move toward God begins with a move He already made toward me. How does that truth change the posture with which I come to Him today?"},
+    ]},
+  { n:16, title:"The Psalm 1 Tree",
+    confession:[
+      {type:'p',text:"The Psalm 1 tree does not announce itself. But it is unmistakably alive. Fruit in season. Leaves that do not wither. Anyone who sees it knows: that tree is fed by something I cannot see from here."},
+      {type:'p',text:"Esse quam videri. To be, not to seem. I want to be the thing, not perform it. But invisible joy does not disciple anyone."},
+    ],
+    devot:"The tree does not perform being alive. It just is alive \u2014 because the roots go where the water is. The life I am pressing toward is a life so visibly rooted, so obviously fed from somewhere the world cannot reach, that the people watching arrive at a conclusion they did not expect: whatever is underneath that, I need it. That is discipleship. Not a curriculum. The visible overflow of a man being fed by something invisible.",
+    trails:[
+      {passage:"Psalm 1:1\u20136 | Jeremiah 17:7\u20138", q:"Psalm 1 says the man who meditates on God\u2019s word is like a tree planted by rivers, bearing fruit in season, leaves not withering. What does the drought reveal about where my roots actually are?"},
+      {passage:"John 7:37\u201339 | Isaiah 58:10\u201311", q:"Jesus says rivers of living water will flow from the innermost being of the one who believes. Is what currently flows out of me giving people reason to ask where I am drawing from?"},
+      {passage:"2 Corinthians 3:2\u20133 | Matthew 5:14\u201316", q:"Paul says the Corinthians are a letter from Christ, to be known and read by all. Jesus says let your light shine so that they may see and give glory to your Father. What does my life currently make visible?"},
+    ]},
+  { n:17, title:"The Pattern in Scripture",
+    confession:[
+      {type:'p',text:"Men and women who pressed in toward God without a guaranteed outcome, without knowing what the response would be or when it would come. They pressed in anyway. That is the prescription. Not what they did, but why they could not stop."},
+      {type:'h',text:"None of them followed a system. All of them refused to stop. That is the pattern."},
+      {type:'p',text:"This is brutal optimism. Not the optimism that says everything will be easy. The optimism that says the God I am pressing toward is worth every cost the pressing in requires."},
+    ],
+    devot:"Jacob, Hannah, David, Elijah, the persistent widow, Paul \u2014 none of them had a method that produced guaranteed results. What they shared was simpler and harder: they refused to stop. The prescription is not their technique. It is their conviction that letting go was not an option. That refusal is itself a form of faith.",
+    trails:[
+      {passage:"Luke 18:1\u20138 | Genesis 32:22\u201332", q:"The persistent widow returns again and again. Jacob refuses to let go in the dark. Both are rewarded for refusal, not method. Where am I most tempted to lose heart because the return is not yet visible?"},
+      {passage:"1 Samuel 1:9\u201320 | Psalm 22:1\u20115, 23\u201331", q:"Hannah prays in anguish year after year. David cries out My God, why have you forsaken me? \u2014 yet still declares His praise. What does their pattern say to me about the season I am in?"},
+      {passage:"Isaiah 55:8\u201311 | Romans 11:33\u201336", q:"God says His ways are higher than our ways and His word will not return void. Where do I need to trust His faithfulness in a direction I cannot see?"},
+    ]},
+  { n:18, title:"Do I Have Faith Like Hannah?",
+    confession:[
+      {type:'p',text:"Hannah prayed in anguish for years. Year after year, silence. She was misunderstood, dismissed, accused of drunkenness in the very act of pouring out her soul. She kept coming. Not because she had a formula. Because she had nowhere else to bring the weight of what she was carrying."},
+      {type:'h',text:"God\u2019s blessed response could be silence. The anchor holds even then."},
+    ],
+    devot:"Hannah came year after year with no answer \u2014 not because her strategy was working, but because she had nowhere else to go with what she was carrying. That is a kind of faith that is hard to manufacture and impossible to fake. The faith that has stopped looking for a method and is simply returning to the only One who can meet what it is carrying.",
+    trails:[
+      {passage:"1 Samuel 1:1\u201320 | Psalm 130:1\u20138", q:"Hannah pours out her soul before the LORD in anguish. Is there something I have been carrying before God for a long time without visible answer \u2014 and have I kept coming, or have I quietly stopped?"},
+      {passage:"Luke 11:5\u201313 | Romans 8:26\u201327", q:"Jesus says ask and it will be given. The Spirit intercedes with groanings too deep for words. What am I not bringing to God because I have lost confidence that He will meet it?"},
+      {passage:"Hebrews 11:1, 13\u201316 | Psalm 37:7\u20139", q:"Hebrews says the heroes of faith died without receiving what was promised. David says be still before the LORD and wait patiently. What would patient, non-performance-based trust look like for what I am carrying right now?"},
+    ]},
+  { n:19, title:"David in the Cave",
+    confession:[
+      {type:'p',text:"David wrote from caves. From exile. From the pit. The Psalms are not the writing of a man in comfortable circumstances producing ordered devotionals. They are the raw output of a man refusing to stop seeking God in the worst possible conditions."},
+      {type:'p',text:"Be Thou my vision. The vision did not change when the circumstances were unbearable. If anything, it sharpened."},
+    ],
+    devot:"The instinct in suffering is to wait until conditions improve before pressing in. David\u2019s instinct was the opposite. The harder the conditions, the more urgent the pursuit. Not because he felt spiritual. Because he knew that God was the only solid ground and that the worse the conditions around him, the more clearly he needed to see what was actually true.",
+    trails:[
+      {passage:"Psalm 57:1\u201311 | Psalm 142:1\u20137", q:"David writes from the cave: my heart is steadfast, O God. What is the cave I am in right now \u2014 and am I pressing in from inside it, or waiting for conditions to improve?"},
+      {passage:"Psalm 63:1\u20138 | Habakkuk 3:17\u201319", q:"David says my soul thirsts for You in a dry and weary land \u2014 yet declares Your steadfast love is better than life. What would it look like to press in with the same conviction from inside my current difficulty?"},
+      {passage:"2 Corinthians 1:3\u201411 | 2 Corinthians 4:7\u201312", q:"Paul says they despaired of life itself so they would rely not on themselves but on God. What is the hardship I am currently in doing to my reliance on God \u2014 increasing it or decreasing it?"},
+    ]},
+  { n:20, title:"Elijah Under the Juniper Tree",
+    confession:[
+      {type:'p',text:"Elijah collapsed under a juniper tree. Done. Finished. He asked God to take his life. The response was not a vision or a thundering word. It was bread. Rest. \u2018The journey is too great for you.\u2019 God met him in the exhaustion, not after it."},
+      {type:'p',text:"Sometimes the most faithful thing is simply to eat, sleep, and get up and go again because the journey ahead requires more than what I have right now."},
+    ],
+    devot:"Elijah had just called down fire from heaven and then ran from a woman\u2019s threat. He was done. And God\u2019s response was not a rebuke for weakness. It was bread. Rest. He fed Elijah before He sent him anywhere. And when the word came, it came in the still small voice \u2014 after the wind, the earthquake, the fire. Sometimes the most faithful thing is not more effort. It is to receive what God is offering and then get up.",
+    trails:[
+      {passage:"1 Kings 19:1\u201318 | Matthew 11:28\u201330", q:"Elijah says it is enough \u2014 I am done. God gives him bread and rest before anything else. Jesus says come to Me, all who are weary, and I will give you rest. Am I in a season where God is offering rest that I am refusing?"},
+      {passage:"Isaiah 40:28\u201331 | Psalm 23:1\u20136", q:"Isaiah says God gives power to the faint and strength to the powerless. David says the LORD makes me lie down in green pastures, He restores my soul. Where do I need restoration before I can effectively pursue?"},
+      {passage:"John 4:6, 34 | Mark 6:31\u201332", q:"Jesus sat down at the well because He was weary. He told His disciples to come away and rest. Where is the line between the faithful rest God ordains and the passivity that is really drift \u2014 and which side am I on?"},
+    ]},
+  { n:21, title:"The Honest Question",
+    confession:[
+      {type:'p',text:"Is my soul aching to know God better, or am I about to pursue Him in my own strength?"},
+      {type:'p',text:"The ache is the sign that God is already at work. I do not manufacture it. When I feel it, I do not manage it into a routine. I bring it to Him directly, openly, and let it drive me into His presence."},
+      {type:'h',text:"The question I bring into every morning is not: did I do enough? It is: did I come to Him?"},
+    ],
+    devot:"There are two men who open their Bibles in the morning. One is responding to an ache drawing him toward the Word not as a task but as the only place where what is stirring can be fed. The other is executing a discipline \u2014 checking a box that keeps the system running. Both show up. The difference between them is everything. The question is not whether I came. It is why.",
+    trails:[
+      {passage:"Psalm 84:1\u20132 | Psalm 42:1\u20132", q:"The Psalmist says my soul longs, yes, faints for the courts of the LORD. Is there a longing underneath my coming today, or am I mostly executing a habit?"},
+      {passage:"Matthew 5:6 | John 7:37\u201338", q:"Jesus says blessed are those who hunger and thirst for righteousness \u2014 they will be satisfied. He says if anyone thirsts, let him come to Me. Where has my thirst gone, and am I willing to ask God to restore it?"},
+      {passage:"Philippians 3:10\u201314 | Psalm 27:8", q:"Paul says I want to know Christ. David says my heart says, Seek His face. What is the single orientation of my heart this morning \u2014 completion of a task or encounter with a Person?"},
+    ]},
+  { n:22, title:"The Soul\u2019s Happiness in God",
+    confession:[
+      {type:'p',text:"George Mueller called it the first great and primary business of each day: the soul\u2019s happiness in God. Not prayer for others, not preparation for ministry, not the work, however urgent. The soul\u2019s happiness in God first \u2014 because everything else either flows from that or it does not flow at all."},
+      {type:'p',text:"I know this. And I do not always do this. The discipline is easier for me than the delight. The output is more natural than the abiding. That is precisely where the drift hides \u2014 not in laziness, but in the momentum of competence."},
+      {type:'h',text:"The feeding point is not the feeling I arrive with. It is the expectation that He is faithful to fill what comes to Him empty."},
+    ],
+    devot:"Mueller\u2019s conviction is precise and costly. Not joy as a nice thing to have if the morning goes well. The soul\u2019s happiness in God as the first business \u2014 because everything else either flows from that or it does not flow at all. The drift hides in the momentum of competence \u2014 the pull toward output and effort and the work, which I do well, at the cost of the one thing that makes all of it worth anything.",
+    trails:[
+      {passage:"Psalm 90:14 | Lamentations 3:22\u201326", q:"Psalm 90 says satisfy us in the morning with your steadfast love. His mercies are new every morning. Is the soul\u2019s happiness in God actually my first business \u2014 or does something else claim the first of my morning?"},
+      {passage:"Matthew 5:6 | Psalm 36:7\u20139", q:"Jesus says those who hunger and thirst will be satisfied. David says we feast on the abundance of Your house. When did I last leave the morning table genuinely satisfied?"},
+      {passage:"Hebrews 12:2 | Psalm 71:14", q:"Jesus endured the cross for the joy set before Him \u2014 joy was the fuel during the work. David says I will hope continually and praise You yet more and more. How do I cultivate a vision of joy in God that does not depend on circumstances cooperating?"},
+    ]},
+  { n:23, title:"PRESS \u2014 Pour Out",
+    confession:[
+      {type:'p',text:"Before anything else, I pour out what is actually in me. The cold heart. The distracted mind. The unfinished worries. I do not clean myself up before I come. I come, and I bring all of it."},
+      {type:'h',text:"Coming honestly is the first act of trust."},
+    ],
+    devot:"The first movement is honesty. Pour out your heart before Him \u2014 that is a command and a promise in one line. The command is to bring what is actually there, not what I think should be there. The promise is that He is a refuge. I do not need to arrive with the right interior state or perform readiness before I come. He can handle my real self. His welcome is not contingent on my condition.",
+    trails:[
+      {passage:"Psalm 62:5\u20138 | Psalm 51:1\u201317", q:"Psalm 62 says pour out your heart before Him; God is a refuge. Psalm 51 begins with David bringing his broken, contrite heart. What am I carrying right now that I have not yet actually poured out before God?"},
+      {passage:"Hebrews 4:14\u201316 | Romans 8:26\u201327", q:"Hebrews says we have a high priest who sympathizes with our weakness \u2014 draw near with confidence. What weakness am I trying to resolve before I come, that I should bring as the very content of my coming?"},
+      {passage:"Philippians 4:6\u20137 | 1 Peter 5:6\u20137", q:"Paul says present your requests to God. Peter says cast all your anxiety on Him because He cares for you. Have I actually cast it, or am I just describing it?"},
+    ]},
+  { n:24, title:"PRESS \u2014 Remember",
+    confession:[
+      {type:'p',text:"Before I bring my needs, I bring my worship. A Psalm. A hymn. One truth about who He is, held before everything else."},
+      {type:'h',text:"Worship is not the warm-up. It is the orientation that makes everything after it right."},
+    ],
+    devot:"David commands his soul to remember before he asks for anything. Bless the LORD, O my soul \u2014 forget none of His benefits. This is not a preliminary activity. It is the reorientation of the soul toward its proper object before the soul attempts anything else. The soul that has just remembered who God is asks differently, waits differently, trusts differently than the soul that moved straight to its needs.",
+    trails:[
+      {passage:"Psalm 103:1\u20135 | Psalm 145:1\u20137", q:"David says bless the LORD, O my soul, and forget not all His benefits. What specific truth about who God is do I need to hold before everything else this morning?"},
+      {passage:"Deuteronomy 8:10\u201418 | Psalm 77:10\u201315", q:"God tells Israel to remember the LORD and not forget Him. Asaph says I will remember the deeds of the LORD. Where is my memory of God\u2019s faithfulness weakest right now?"},
+      {passage:"Revelation 4:1\u201311 | Isaiah 6:1\u20135", q:"The elders cast their crowns and worship Him who is and who was and who is to come. Isaiah was undone when he saw the LORD high and lifted up. What would happen to my requests and anxieties if I genuinely encountered who God is before I brought them?"},
+    ]},
+  { n:25, title:"PRESS \u2014 Eat",
+    confession:[
+      {type:'p',text:"I am not trying to cover ground. I am trying to find Him. I stay where something moves. I ask why it moves me."},
+      {type:'p',text:"What that encounter looks like is not always the same. It could come as increased clarity, stronger desire, depth of peace, Truth pressing on the heart, sin convicting, internal steadiness, real gladness, great joy. The response is His to give."},
+    ],
+    devot:"The encounter with God in the Word is not always the same. Some mornings a single verse breaks something open. Some mornings clarity comes. Some mornings conviction. Some mornings a depth of peace that settles in slowly. The response is His to give. My part is to stay long enough to receive whatever He brings. Not racing to cover ground. Eating.",
+    trails:[
+      {passage:"Jeremiah 15:16 | Psalm 119:97\u2013104", q:"Jeremiah says your words became for me a joy and the delight of my heart. When did I last experience the Word as something I ate rather than managed?"},
+      {passage:"Matthew 4:4 | John 6:63, 68", q:"Jesus says man shall not live by bread alone. Peter says Lord, to whom shall we go? You have the words of eternal life. What would I miss today if I came to the Word but left without being fed?"},
+      {passage:"Psalm 119:129\u2013136 | Isaiah 50:4\u20135", q:"Isaiah says morning by morning God wakens my ear to hear as those who are taught. Is there something God has been saying that I keep moving past without staying?"},
+    ]},
+  { n:26, title:"PRESS \u2014 Speak and Stay",
+    confession:[
+      {type:'p',text:"The Word and prayer are one conversation. I do not finish reading and then switch to prayer as if they are separate tasks. I respond to what He just said."},
+      {type:'p',text:"And then I stay. The goal is not completion. It is gladness in Him."},
+    ],
+    devot:"The split between Bible reading and prayer is artificial. The Word speaks and I respond. And then I stay \u2014 not because another task needs completing, but because the soul\u2019s happiness in God is the goal. Some mornings gladness comes quickly. Some mornings I am pressing in just to be able to press in. That is Jacob in the dark, refusing to let go. The man who learns to stay finds that the same space that once required clearing begins to feel like home.",
+    trails:[
+      {passage:"Psalm 5:1\u20133 | Psalm 27:14", q:"David says in the morning I prepare a sacrifice for You and watch. He says wait for the LORD and be strong. What does it mean to watch after you have prayed \u2014 to stay in expectation rather than moving immediately on?"},
+      {passage:"Philippians 4:6\u20137 | Romans 8:26\u201327", q:"Paul says present your requests to God, and the peace of God will guard your hearts. The Spirit intercedes with groanings too deep for words. When the words run out, am I willing to stay anyway?"},
+      {passage:"Luke 18:1 | 1 Thessalonians 5:17", q:"Jesus says we ought always to pray and not lose heart. Paul says pray without ceasing. What would it look like for my prayer to be a continuous orientation throughout the day rather than a discrete event?"},
+    ]},
+  { n:27, title:"The Fruit Is His to Grow",
+    confession:[
+      {type:'p',text:"The fruit of the Spirit. Not the fruit of the method. Not the fruit of the routine. The Spirit produces this. I do not manufacture love by trying harder to love."},
+      {type:'p',text:"He does not grow patience in me by removing everything that requires patience. He puts me in situations where I must wait, where I must hold on, where quitting would be easier."},
+      {type:'h',text:"I abide. He produces. This is the only role that leads anywhere real."},
+    ],
+    devot:"The instinct after understanding PRESS is to think: if I do these things consistently, I will produce the results. That instinct is wrong. Galatians 5 says fruit of the Spirit, not fruit of the method. The Spirit produces this through a life that abides. He grows the fruit not by making my conditions easier but by ordaining exactly the circumstances I need. I choose to trust the One who ordains them.",
+    trails:[
+      {passage:"Galatians 5:16\u201325 | John 15:1\u20135", q:"Paul says the fruit of the Spirit is love, joy, peace, patience \u2014 the Spirit\u2019s fruit, not mine. Where am I straining to produce what only the Spirit can produce through abiding?"},
+      {passage:"Romans 5:3\u20135 | James 1:2\u20134", q:"Paul says tribulation produces perseverance, proven character, hope. James says the testing of your faith produces steadfastness. What circumstance right now is God using to grow something in me that I could not develop any other way?"},
+      {passage:"2 Peter 1:3\u20118 | Colossians 1:9\u201312", q:"Peter says God has given us everything we need for life and godliness. Paul prays the Colossians would bear fruit while growing in the knowledge of God. What does grace-fueled, Spirit-dependent effort look like in practice for where I am today?"},
+    ]},
+  { n:28, title:"The Anchor Holds",
+    confession:[
+      {type:'p',text:"Will I press in when God\u2019s response is silence? Not the faith that presses in until it gets a feeling it can name. The faith that presses in because He has commanded it, because He is worth it, because the word will not return void."},
+      {type:'h',text:"God\u2019s blessed response could be silence. The anchor holds even then."},
+      {type:'p',text:"Hebrews calls hope an anchor for the soul, sure and steadfast \u2014 not an anchor that only holds in calm water, but one secured to something the storm cannot reach."},
+    ],
+    devot:"This is the hardest question in the whole confession: will I press in when the response is silence? The faith that functions only when it gets a measurable return is not yet anchored to something the storm cannot reach. Blessed assurance is a settled conviction that holds when the feeling is absent, when the circumstances are wrong, when the expected response has not come. The vision is fixed. The steps are trusted to Him.",
+    trails:[
+      {passage:"Hebrews 6:17\u201320 | Romans 8:24\u201325", q:"Hebrews says we have hope as an anchor for the soul, sure and steadfast, entering the inner place behind the curtain. Where am I hoping in what I can see rather than anchoring in what is behind the curtain?"},
+      {passage:"Isaiah 26:3\u20134 | Psalm 112:6\u20138", q:"Isaiah says You keep him in perfect peace whose mind is stayed on You. Psalm 112 says the righteous man is not afraid of bad news, his heart is firm. What news or circumstance is currently testing whether my heart is firm?"},
+      {passage:"2 Timothy 1:12 | Job 13:15 | Habakkuk 2:4", q:"Paul says I know whom I have believed. Job says though He slay me, I will hope in Him. The righteous shall live by his faith. What is the deepest thing I am trusting God with right now \u2014 and is my trust based on expected outcomes or on who He is?"},
+    ]},
+  { n:29, title:"The Drift Check",
+    confession:[
+      {type:'p',text:"Only God and I know the real state of my heart. These questions are not for anyone else."},
+      {type:'p',text:"Was I pressing in this morning, or was I performing? Did I come to find Him, or to complete something?"},
+      {type:'p',text:"When did I last feel genuine gladness in God \u2014 not relief at finishing a devotional, but actual joy in Him?"},
+      {type:'p',text:"Is the ache to know Him more growing or shrinking?"},
+      {type:'h',text:"The drift check is not about what I did. It is about where my heart is. I bring it honestly. He already knows."},
+    ],
+    devot:"C.S. Lewis wrote that the prayer preceding all prayers is: may it be the real I who speaks, may it be the real Thou that I speak to. That is the drift check in one line. Not a performance review. An invitation to bring my real self before the real God and let that exposure do its work. If I rush through the questions on this page, the rushing is itself an answer.",
+    trails:[
+      {passage:"Psalm 139:1\u20136, 23\u201324 | Lamentations 3:40\u201341", q:"David asks God to search him and see if there is any grievous way in him. Jeremiah says let us test and examine our ways and return to the LORD. What would I find if I honestly examined the direction of my heart over the past week?"},
+      {passage:"Revelation 2:1\u20135 | Revelation 3:14\u201319", q:"Jesus tells Ephesus they have left their first love. He tells Laodicea they are lukewarm and do not know it. Which of these two conditions is closer to where I am right now?"},
+      {passage:"Jeremiah 2:12\u201313 | John 4:13\u201314", q:"God says my people have forsaken Me, the fountain of living waters, and hewed cisterns that hold no water. Jesus says whoever drinks of the water I give will never be thirsty again. When did I last drink from the fountain that never runs dry?"},
+    ]},
+  { n:30, title:"The River Feeds Everyone Downstream",
+    confession:[
+      {type:'p',text:"A man pressing in toward God does not keep it to himself. Not because he is trying to share it, but because a well being deepened overflows. A river being fed runs strong."},
+      {type:'p',text:"The people closest to me do not primarily need my information. They need to see a man whose life makes the treasure visible. Someone for whom this is not a role or a responsibility but a pursuit he cannot stop."},
+      {type:'h',text:"I press in for myself. I press in for them. The river that feeds me is the river that feeds everyone downstream."},
+    ],
+    devot:"The overflow is not a project. It is the natural consequence of a well being deepened. I cannot manufacture for the people I lead what I have not received myself. The people closest to me can feel the difference between a man speaking from presence and a man speaking from memory. One has weight. The other has information. The most important thing I can do for everyone downstream is to stay upstream with God.",
+    trails:[
+      {passage:"John 7:37\u201339 | Psalm 1:1\u20133", q:"Jesus says rivers of living water will flow from the innermost being of the one who believes. Is what currently flows out of me giving the people around me reason to ask where I am drawing from?"},
+      {passage:"2 Corinthians 1:3\u20134 | 1 Thessalonians 2:7\u20138", q:"Paul says we comfort others with the comfort we ourselves have received. What comfort am I currently receiving from God that can flow to the people I lead?"},
+      {passage:"Ezekiel 47:1\u201312 | Revelation 22:1\u20135", q:"Ezekiel sees a river flowing from the temple, getting deeper as it flows, bringing life everywhere it goes. What does it mean for my life to be a conduit of that river rather than a stagnant pool \u2014 and what is blocking the flow right now?"},
+    ]},
+];
+
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem('quest_state') || 'null'); } catch(e) { return null; }
+}
+function saveState(s) {
+  try { localStorage.setItem('quest_state', JSON.stringify(s)); } catch(e) {}
+}
+function loadEntries() {
+  try { return JSON.parse(localStorage.getItem('quest_entries') || '{}'); } catch(e) { return {}; }
+}
+function saveEntries(e) {
+  try { localStorage.setItem('quest_entries', JSON.stringify(e)); } catch(e) {}
+}
+function loadArchive() {
+  try { return JSON.parse(localStorage.getItem('quest_archive') || '[]'); } catch(e) { return []; }
+}
+function saveArchive(a) {
+  try { localStorage.setItem('quest_archive', JSON.stringify(a)); } catch(e) {}
+}
+
+// Default state: trail 1 (0-indexed), day 1 (0-indexed)
+let state = loadState() || { trail: 0, day: 0 };
+let entries = loadEntries();
+let currentViewDay = state.day;
+let currentViewTrail = state.trail;
+
+// ═══════════════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════════════
+
+function entryKey(trail, day, trailIdx) {
+  return `t${trail}_d${day}_tr${trailIdx}`;
+}
+
+function checkedKey(trail, day, trailIdx) {
+  return `chk_t${trail}_d${day}_tr${trailIdx}`;
+}
+
+function isChecked(trail, day, trailIdx) {
+  return entries[checkedKey(trail, day, trailIdx)] === true;
+}
+
+function countCheckedTrail(trailIdx) {
+  // Count how many days are checked for this trail in current cycle
+  return DAYS.filter((_, di) => isChecked(state.trail, di, trailIdx)).length;
+}
+
+function trailLabel(t) { return `Trail ${t+1}`; }
+function dayLabel(d) { return `Day ${d+1}`; }
+
+function updateHeaderLabel() {
+  const el = document.getElementById('header-trail-label');
+  if (el) el.textContent = `${trailLabel(state.trail)}  \u2022  ${dayLabel(state.day)}`;
+}
+
+function updateResumeBanner() {
+  const day = DAYS[state.day];
+  document.getElementById('resume-label').textContent =
+    `${trailLabel(state.trail)} \u2022 ${dayLabel(state.day)}`;
+  document.getElementById('resume-title').textContent = day.title;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER PRESS
+// ═══════════════════════════════════════════════════════════════════
+
+function buildPressShort() {
+  const container = document.getElementById('press-short-steps');
+  container.innerHTML = PRESS_SHORT.map(step => `
+    <div class="ps-step" onclick="this.classList.toggle('open')">
+      <div class="ps-header">
+        <div class="ps-letter">${step.l}</div>
+        <div class="ps-title-block">
+          <div class="ps-word">${step.w}</div>
+          <div class="ps-tagline">${step.tag}</div>
+        </div>
+        <div class="ps-chevron">&#8964;</div>
+      </div>
+      <div class="ps-body">
+        <div class="ps-verse">
+          <div class="ps-verse-text">&ldquo;${step.vt}&rdquo;</div>
+          <div class="ps-verse-ref">&mdash; ${step.vr}</div>
+        </div>
+        <div class="ps-body-text">${step.body}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function buildPressLong() {
+  const container = document.getElementById('press-long-steps');
+  container.innerHTML = `
+    <div style="text-align:center;margin-bottom:12px">
+      <div class="press-card-title">PRESS</div>
+      <div class="press-card-sub">The depth behind each step</div>
+    </div>
+    <div class="press-card-rule"></div>
+    ${PRESS_LONG.map(step => `
+      <div class="pl-step">
+        <div class="pl-letter-word"><span>${step.l}</span>${step.w.toUpperCase()}</div>
+        <div class="pl-tagline">${step.tag}</div>
+        <div class="pl-verse">
+          <div class="pl-verse-text">&ldquo;${step.vt}&rdquo;</div>
+          <div class="pl-verse-ref">&mdash; ${step.vr}</div>
+        </div>
+        <div class="pl-body-text">${step.body}</div>
+      </div>
+    `).join('')}
+    <div class="ps-close" style="margin-top:16px">
+      <div class="ps-close-main">The goal is not completion. It is gladness in Him.</div>
+      <div class="ps-close-q">Did I leave with my soul more glad in God than when I arrived?</div>
+      <div class="ps-close-anchor"><em>I press in until I can press in, and then I press in.</em></div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDER DAY
+// ═══════════════════════════════════════════════════════════════════
+
+function renderDay(trailIdx, dayIdx) {
+  currentViewTrail = trailIdx;
+  currentViewDay = dayIdx;
+  const day = DAYS[dayIdx];
+  const container = document.getElementById('day-view-container');
+
+  // Build confession HTML
+  const confHTML = day.confession.map(item => {
+    if (item.type === 'h') return `<div class="confession-hard">${item.text}</div>`;
+    return `<div class="confession-p">${item.text}</div>`;
+  }).join('');
+
+  // Build trails HTML
+  const trailsHTML = day.trails.map((trail, ti) => {
+    const cbKey = checkedKey(trailIdx, dayIdx, ti);
+    const entKey = entryKey(trailIdx, dayIdx, ti);
+    const checked = entries[cbKey] === true;
+    const entryVal = entries[entKey] || '';
+    const isCurrent = (ti === 0 && trailIdx === state.trail && dayIdx === state.day) ? 'trail-section open' : 'trail-section';
+
+    // 4 checkboxes — which one is "current" (next to fill)
+    const cycleNum = 0; // current cycle always cycle 0 visually
+    const cbsHTML = [0,1,2,3].map(ci => {
+      // We'll store per-cycle checks separately but for now just use the checked state
+      // for box 0, and grey the rest
+      const isFilled = (ci === 0 && checked);
+      return `<div class="trail-cb ${isFilled ? 'checked' : (ci === 0 ? 'current-cycle' : '')}"
+        onclick="event.stopPropagation(); handleCheck(${trailIdx},${dayIdx},${ti},${ci},this)"></div>`;
+    }).join('');
+
+    return `
+      <div class="${isCurrent}" id="trail-${ti}">
+        <div class="trail-header" onclick="toggleTrailSection(${ti})">
+          <div class="trail-num">${trailLabel(ti)}</div>
+          <div class="trail-checkboxes">${cbsHTML}</div>
+          <div class="trail-chevron">&#8964;</div>
+        </div>
+        <div class="trail-body">
+          <div class="trail-passage">${trail.passage}</div>
+          <div class="trail-question">${trail.q}</div>
+          <textarea class="trail-entry" id="entry-${ti}"
+            placeholder="Your reflection…" rows="4">${entryVal}</textarea>
+          <div class="trail-save">
+            <div class="trail-saved-note" id="saved-note-${ti}">Saved</div>
+            <button class="trail-save-btn" onclick="saveEntry(${trailIdx},${dayIdx},${ti})">Save</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Nav buttons
+  const prevDisabled = (dayIdx === 0 && trailIdx === 0);
+  const prevLabel = dayIdx === 0 ? '&larr; Back' : '&larr; Previous Day';
+  const nextLabel = dayIdx === 29 && trailIdx === 2 ? 'Complete Trail 3 &#10003;' : 'Next Day &rarr;';
+
+  container.innerHTML = `
+    <div class="day-view">
+      <div class="day-badge">
+        <div class="day-num">${dayLabel(dayIdx)}</div>
+        <div class="trail-badge">${trailLabel(trailIdx)}</div>
+      </div>
+      <div class="day-title">${day.title}</div>
+      <div class="confession-block">${confHTML}</div>
+      <div class="devot-text">${day.devot}</div>
+      ${trailsHTML}
+      <div class="day-nav">
+        <button class="day-nav-btn day-nav-prev" onclick="navigateDay(-1)" ${prevDisabled?'disabled style="opacity:.3"':''}>
+          ${prevLabel}
+        </button>
+        <button class="day-nav-btn day-nav-next" onclick="navigateDay(1)">
+          ${nextLabel}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleTrailSection(ti) {
+  const el = document.getElementById(`trail-${ti}`);
+  if (el) el.classList.toggle('open');
+}
+
+function saveEntry(trailIdx, dayIdx, ti) {
+  const val = document.getElementById(`entry-${ti}`).value;
+  const key = entryKey(trailIdx, dayIdx, ti);
+  entries[key] = val;
+  saveEntries(entries);
+  const note = document.getElementById(`saved-note-${ti}`);
+  if (note) { note.style.display = 'block'; setTimeout(() => { note.style.display='none'; }, 1500); }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// CHECKBOX LOGIC
+// ═══════════════════════════════════════════════════════════════════
+
+function handleCheck(trailIdx, dayIdx, trailSectionIdx, cycleIdx, el) {
+  if (cycleIdx !== 0) return;
+
+  const key = checkedKey(trailIdx, dayIdx, trailSectionIdx);
+  const alreadyChecked = entries[key] === true;
+
+  if (!alreadyChecked) {
+    entries[key] = true;
+    saveEntries(entries);
+    el.classList.add('checked');
+
+    // Check if this is the very last box — Trail 3, Day 30, Trail Section 3
+    if (trailIdx === 2 && dayIdx === 29 && trailSectionIdx === 2) {
+      showCompleteModal();
+      return;
+    }
+
+    // Advance resume pointer
+    advanceResume(trailIdx, dayIdx, trailSectionIdx);
+  } else {
+    entries[key] = false;
+    saveEntries(entries);
+    el.classList.remove('checked');
+  }
+}
+
+function advanceResume(trailIdx, dayIdx, trailSectionIdx) {
+  // Resume advances to next day as soon as ANY trail section box is checked
+  // on the current resume day. This way the next morning always opens the next day.
+
+  let newTrail = state.trail;
+  let newDay = state.day;
+
+  // If the box checked is on or ahead of the current resume day in the current trail
+  if (trailIdx === state.trail && dayIdx >= state.day) {
+    // Advance to the day after the one just checked
+    if (dayIdx + 1 <= 29) {
+      newDay = dayIdx + 1;
+    } else {
+      // End of trail 30 days — stay at day 29 until archive/next trail
+      newDay = 29;
+    }
+    newTrail = trailIdx;
+  }
+
+  // If checking a box on a newer trail than current state
+  if (trailIdx > state.trail) {
+    newTrail = trailIdx;
+    newDay = Math.min(dayIdx + 1, 29);
+  }
+
+  state.trail = newTrail;
+  state.day = newDay;
+  saveState(state);
+  updateResumeBanner();
+  updateHeaderLabel();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════
+
+function navigateDay(dir) {
+  let d = currentViewDay + dir;
+  let t = currentViewTrail;
+  if (d < 0) {
+    if (t > 0) { t--; d = 29; }
+    else { d = 0; }
+  } else if (d > 29) {
+    if (t < 2) { t++; d = 0; }
+    else {
+      showCompleteModal();
+      return;
+    }
+  }
+  renderDay(t, d);
+  document.getElementById('panel-today').scrollTop = 0;
+  window.scrollTo(0,0);
+}
+
+function goToResume() {
+  renderDay(state.trail, state.day);
+  showPanel('today', document.querySelector('.nav-tab'));
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// COMPLETE MODAL
+// ═══════════════════════════════════════════════════════════════════
+
+function showCompleteModal() {
+  const modal = document.getElementById('complete-modal');
+  const title = document.getElementById('modal-title');
+  const text = document.getElementById('modal-text');
+  const btn = document.getElementById('modal-primary-btn');
+
+  if (state.trail === 2) {
+    title.textContent = 'The Quest Complete';
+    text.innerHTML = `You have completed all three trails across all 30 days. <em>The mountain has been climbed.</em><br><br>
+      Your entries will be archived and the quest will reset to Trail 1, Day 1. The trail is always open.`;
+    btn.textContent = 'Archive & Begin Again';
+    btn.onclick = archiveAndReset;
+  } else {
+    title.textContent = `Trail ${state.trail + 1} Complete`;
+    text.innerHTML = `You have completed <em>Trail ${state.trail + 1}</em> across all 30 days.<br><br>
+      Ready to begin <em>Trail ${state.trail + 2}</em>? A new angle on the same summit.`;
+    btn.textContent = `Begin Trail ${state.trail + 2}`;
+    btn.onclick = beginNextTrail;
+  }
+  modal.classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('complete-modal').classList.remove('show');
+}
+
+function beginNextTrail() {
+  closeModal();
+  state.trail = Math.min(state.trail + 1, 2);
+  state.day = 0;
+  saveState(state);
+  updateResumeBanner();
+  updateHeaderLabel();
+  renderDay(state.trail, state.day);
+}
+
+function archiveAndReset() {
+  closeModal();
+  // Archive current entries
+  const archive = loadArchive();
+  archive.unshift({
+    cycle: archive.length + 1,
+    date: new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}),
+    entries: { ...entries }
+  });
+  saveArchive(archive);
+  // Reset
+  entries = {};
+  saveEntries(entries);
+  state = { trail: 0, day: 0 };
+  saveState(state);
+  updateResumeBanner();
+  updateHeaderLabel();
+  renderDay(0, 0);
+  renderDayList();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DAY LIST
+// ═══════════════════════════════════════════════════════════════════
+
+function renderDayList() {
+  const container = document.getElementById('day-list-container');
+
+  // Trail selector
+  const trailBtns = [0,1,2].map(ti => `
+    <button onclick="setListTrail(${ti})" id="list-trail-btn-${ti}"
+      style="flex:1;padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;
+      letter-spacing:1.5px;text-transform:uppercase;border:none;cursor:pointer;
+      background:${ti===currentListTrail?'var(--navy)':'transparent'};
+      color:${ti===currentListTrail?'var(--gold)':'var(--grey-lt)'};
+      border-bottom:2px solid ${ti===currentListTrail?'var(--gold)':'transparent'};
+      transition:all .2s;">
+      Trail ${ti+1}
+    </button>
+  `).join('');
+
+  const items = DAYS.map((day, di) => {
+    const isCurrent = (di === state.day && currentListTrail === state.trail);
+    const hasEntry = [0,1,2].some(ti => entries[entryKey(currentListTrail, di, ti)]);
+    const t0checked = isChecked(currentListTrail, di, 0);
+    const t1checked = isChecked(currentListTrail, di, 1);
+    const t2checked = isChecked(currentListTrail, di, 2);
+
+    return `
+      <div class="day-list-item ${isCurrent?'current':''} ${hasEntry?'has-entry':''}"
+        onclick="openDay(${currentListTrail},${di})">
+        <div class="dli-num">Day ${String(di+1).padStart(2,'0')}</div>
+        <div class="dli-title">${day.title}</div>
+        <div class="dli-dots">
+          <div class="dli-dot ${t0checked?'done':''}"></div>
+          <div class="dli-dot ${t1checked?'done':''}"></div>
+          <div class="dli-dot ${t2checked?'done':''}"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="display:flex;background:var(--white);border-bottom:1px solid rgba(184,150,62,0.2);margin-bottom:12px;">
+      ${trailBtns}
+    </div>
+    ${items}
+  `;
+}
+
+let currentListTrail = 0;
+function setListTrail(ti) {
+  currentListTrail = ti;
+  renderDayList();
+}
+
+function openDay(trailIdx, dayIdx) {
+  currentViewTrail = trailIdx;
+  currentViewDay = dayIdx;
+  renderDay(trailIdx, dayIdx);
+  showPanel('today', document.querySelectorAll('.nav-tab')[0]);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ARCHIVE RENDER
+// ═══════════════════════════════════════════════════════════════════
+
+function exportEntries() {
+  let text = 'THE QUEST — ENTRIES EXPORT\n';
+  text += new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'}) + '\n';
+  text += '='.repeat(40) + '\n\n';
+
+  // Current cycle entries
+  const currentKeys = Object.entries(entries).filter(([k,v]) => !k.startsWith('chk_') && v);
+  if (currentKeys.length) {
+    text += 'CURRENT CYCLE\n' + '-'.repeat(30) + '\n';
+    currentKeys.forEach(([k,v]) => {
+      const parts = k.match(/t(\d)_d(\d+)_tr(\d)/);
+      if (!parts) return;
+      const [,t,d,tr] = parts;
+      const dayTitle = DAYS[parseInt(d)]?.title || '';
+      text += `Trail ${parseInt(t)+1} | Day ${parseInt(d)+1} | ${dayTitle} | Trail Section ${parseInt(tr)+1}\n`;
+      text += v + '\n\n';
+    });
+  }
+
+  // Archived cycles
+  const archive = loadArchive();
+  archive.forEach(cycle => {
+    text += `\nCYCLE ${cycle.cycle} — ${cycle.date}\n` + '-'.repeat(30) + '\n';
+    Object.entries(cycle.entries).filter(([k,v]) => !k.startsWith('chk_') && v).forEach(([k,v]) => {
+      const parts = k.match(/t(\d)_d(\d+)_tr(\d)/);
+      if (!parts) return;
+      const [,t,d,tr] = parts;
+      const dayTitle = DAYS[parseInt(d)]?.title || '';
+      text += `Trail ${parseInt(t)+1} | Day ${parseInt(d)+1} | ${dayTitle} | Trail Section ${parseInt(tr)+1}\n`;
+      text += v + '\n\n';
+    });
+  });
+
+  // Copy to clipboard
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      alert('All entries copied to clipboard. Paste into Notes, email, or anywhere to save.');
+    }).catch(() => fallbackExport(text));
+  } else {
+    fallbackExport(text);
+  }
+}
+
+function fallbackExport(text) {
+  const el = document.createElement('textarea');
+  el.value = text;
+  el.style.position = 'fixed';
+  el.style.opacity = '0';
+  document.body.appendChild(el);
+  el.focus();
+  el.select();
+  try { document.execCommand('copy'); alert('All entries copied to clipboard.'); }
+  catch(e) { alert('Could not copy automatically. Open Archive to view your entries.'); }
+  document.body.removeChild(el);
+}
+
+function renderArchive() {
+  const archive = loadArchive();
+  const container = document.getElementById('archive-container');
+  if (!archive.length) {
+    container.innerHTML = '<div class="archive-empty">No completed cycles yet.<br>Finish all three trails to see your entries archived here.</div>';
+    return;
+  }
+  container.innerHTML = archive.map((cycle, ci) => {
+    const entriesHTML = Object.entries(cycle.entries)
+      .filter(([k,v]) => !k.startsWith('chk_') && v)
+      .map(([k,v]) => {
+        const parts = k.match(/t(\d)_d(\d+)_tr(\d)/);
+        if (!parts) return '';
+        const [,t,d,tr] = parts;
+        const dayTitle = DAYS[parseInt(d)]?.title || '';
+        return `
+          <div class="archive-entry">
+            <div class="archive-entry-label">Trail ${parseInt(t)+1} \u2022 Day ${parseInt(d)+1} \u2022 ${dayTitle} \u2014 Trail Section ${parseInt(tr)+1}</div>
+            <div class="archive-entry-text">${v}</div>
+          </div>
+        `;
+      }).join('');
+
+    return `
+      <div class="archive-cycle" id="arc-${ci}">
+        <div class="archive-cycle-header" onclick="document.getElementById('arc-${ci}').classList.toggle('open')">
+          <div>
+            <div class="archive-cycle-title">Cycle ${cycle.cycle}</div>
+            <div class="archive-cycle-date">${cycle.date}</div>
+          </div>
+          <div class="archive-cycle-chevron">&#8964;</div>
+        </div>
+        <div class="archive-cycle-body">
+          ${entriesHTML || '<div style="font-family:Cormorant Garamond,serif;font-size:13px;font-style:italic;color:#888;padding:8px 0;">No written entries in this cycle.</div>'}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PANEL NAV
+// ═══════════════════════════════════════════════════════════════════
+
+function showPanel(id, tab) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (tab) tab.classList.add('active');
+  if (id === 'days') { currentListTrail = state.trail; renderDayList(); }
+  if (id === 'archive') renderArchive();
+  window.scrollTo(0, 0);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+
+buildPressShort();
+buildPressLong();
+updateHeaderLabel();
+updateResumeBanner();
+renderDay(state.trail, state.day);
+</script>
+</body>
+</html>
